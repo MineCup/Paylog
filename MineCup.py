@@ -48,6 +48,8 @@ if "MineCup" in str(account.content):
                    "amount": int(vims),
                    "process": ""}
     send_vim = session.post("https://cp.vimeworld.ru/real?give", data=send_vimers)  # отправка вимеров
+    vk.method('messages.send', {'chat_id': 5, 'message': f"🟢 Бот запущен. При запуске бот перевел {vims} вимеров eLs",
+                                'random_id': randint(0, 2147483647)})
     print(f"Отправлено вимеров: {vims}")
 
 

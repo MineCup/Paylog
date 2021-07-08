@@ -4,6 +4,7 @@ from requests import get, Session
 from time import sleep
 from os import environ
 from bs4 import BeautifulSoup
+from re import findall
 
 vk = VkApi(token=str(environ.get("vk_token")))
 
@@ -31,6 +32,23 @@ session.post(url="https://cp.vimeworld.ru/login", data=data)
 account = session.get(url="https://cp.vimeworld.ru/index")
 if "MineCup" in str(account.content):
     print("Сессия авторизована.")
+
+    give = session.get(url="https://cp.vimeworld.ru/real?give", data={"give": ""})
+    csfr_token = findall("'.{64}'", give.text)[2][1:-1]
+
+    payload = session.get("https://cp.vimeworld.ru/real?paylog")  # просмотр транзакций
+    soup = BeautifulSoup(payload.text, 'lxml')
+    vims = 0
+    for tag in soup.find_all("b"):
+        if "." in tag.text:
+            vims = tag.text[:-3]
+            break
+    send_vimers = {"csrf_token": csfr_token,
+                   "usrnm": "eLs",
+                   "amount": int(vims),
+                   "process": ""}
+    send_vim = session.post("https://cp.vimeworld.ru/real?give", data=send_vimers)  # отправка вимеров
+    print(f"Отправлено вимеров: {vims}")
 
 
 def write_msg(message):

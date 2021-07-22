@@ -34,7 +34,7 @@ if "MineCup" in str(account.content):
     print("Сессия авторизована.")
 
     give = session.get(url="https://cp.vimeworld.ru/real?give", data={"give": ""})
-    csfr_token = findall("'.{64}'", give.text)[2][1:-1]
+    csfr_token = findall("'.{64}'", give.text)[-1][1:-1]
 
     payload = session.get("https://cp.vimeworld.ru/real?paylog")  # просмотр транзакций
     soup = BeautifulSoup(payload.text, 'lxml')
